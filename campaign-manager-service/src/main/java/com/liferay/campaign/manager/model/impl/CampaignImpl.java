@@ -16,6 +16,13 @@ package com.liferay.campaign.manager.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.campaign.manager.service.CampaignLocalServiceUtil;
+import com.liferay.campaign.manager.util.CampaignStatus;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+
+import java.util.Locale;
+
 /**
  * The extended model implementation for the Campaign service. Represents a row in the &quot;Campaign&quot; database table, with each column mapped to a property of this class.
  *
@@ -27,11 +34,37 @@ import aQute.bnd.annotation.ProviderType;
  */
 @ProviderType
 public class CampaignImpl extends CampaignBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a campaign model instance should use the {@link com.liferay.campaign.manager.model.Campaign} interface instead.
-	 */
+
 	public CampaignImpl() {
 	}
+
+	@Override
+	public String getDescription() {
+		return CampaignLocalServiceUtil.getCampaignDescription(
+			this, LocaleUtil.getMostRelevantLocale());
+	}
+
+	@Override
+	public String getDescription(Locale locale) {
+		return CampaignLocalServiceUtil.getCampaignDescription(this, locale);
+	}
+
+	@Override
+	public String getName() {
+		return CampaignLocalServiceUtil.getCampaignName(
+			this, LocaleUtil.getMostRelevantLocale());
+	}
+
+	@Override
+	public String getName(Locale locale) {
+		return CampaignLocalServiceUtil.getCampaignName(this, locale);
+	}
+
+	@Override
+	public String getStatusLabel() {
+		CampaignStatus status = CampaignStatus.values()[this.getStatus()];
+
+		return StringUtil.toLowerCase(status.name());
+	}
+
 }
