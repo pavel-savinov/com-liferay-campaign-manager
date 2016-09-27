@@ -1,0 +1,23 @@
+create table Campaign (
+	uuid_ VARCHAR(75) null,
+	campaignId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	startDate DATE null,
+	endDate DATE null,
+	status INTEGER
+);
+
+create table CampaignLocalization (
+	campaignLocalizationId LONG not null primary key,
+	companyId LONG,
+	groupId LONG,
+	campaignId LONG,
+	name VARCHAR(140) null,
+	description VARCHAR(340) null,
+	languageId VARCHAR(75) null
+);

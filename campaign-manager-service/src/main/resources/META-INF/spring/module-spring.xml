@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.liferay.campaign.manager.service.impl.CampaignLocalServiceImpl" id="com.liferay.campaign.manager.service.CampaignLocalService" />
+	<bean class="com.liferay.campaign.manager.service.impl.CampaignServiceImpl" id="com.liferay.campaign.manager.service.CampaignService" />
+	<bean class="com.liferay.campaign.manager.service.persistence.impl.CampaignPersistenceImpl" id="com.liferay.campaign.manager.service.persistence.CampaignPersistence" parent="basePersistence" />
+	<bean class="com.liferay.campaign.manager.service.persistence.impl.CampaignLocalizationPersistenceImpl" id="com.liferay.campaign.manager.service.persistence.CampaignLocalizationPersistence" parent="basePersistence" />
+</beans>
