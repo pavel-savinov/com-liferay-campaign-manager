@@ -18,9 +18,13 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.campaign.manager.service.CampaignLocalServiceUtil;
 import com.liferay.campaign.manager.util.CampaignStatus;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -61,10 +65,50 @@ public class CampaignImpl extends CampaignBaseImpl {
 	}
 
 	@Override
+	public int getStatus() {
+		Date now = new Date();
+		CampaignStatus status = CampaignStatus.values()[super.getStatus()];
+		CampaignStatus newStatus = null;
+
+		switch (status) {
+			case SCHEDULED:
+				if (now.after(getStartDate()) && now.before(getEndDate())) {
+					newStatus = CampaignStatus.STARTED;
+				}
+				else if (now.after(getEndDate())) {
+					newStatus = CampaignStatus.FINISHED;
+				}
+
+				break;
+			case STARTED:
+				if (now.after(getEndDate())) {
+					newStatus = CampaignStatus.FINISHED;
+				}
+
+				break;
+		}
+
+		if (newStatus != null) {
+			try {
+				CampaignLocalServiceUtil.updateCampaignStatus(this, newStatus);
+			}
+			catch (PortalException pe) {
+				_log.error("Error updating campaign status", pe);
+			}
+
+			status = newStatus;
+		}
+
+		return status.ordinal();
+	}
+
+	@Override
 	public String getStatusLabel() {
 		CampaignStatus status = CampaignStatus.values()[this.getStatus()];
 
 		return StringUtil.toLowerCase(status.name());
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(CampaignImpl.class);
 
 }

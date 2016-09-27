@@ -168,6 +168,21 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 		return campaign;
 	}
 
+	@Override
+	public Campaign updateCampaignStatus(
+			Campaign campaign, CampaignStatus newStatus)
+		throws PortalException {
+
+		Date now = new Date();
+
+		campaign.setStatus(newStatus.ordinal());
+		campaign.setModifiedDate(now);
+
+		campaignPersistence.update(campaign);
+
+		return campaign;
+	}
+
 	protected void updateCampaignLocalization(
 		Campaign campaign, Map<Locale, String> nameMap,
 		Map<Locale, String> descriptionMap) {
@@ -199,6 +214,7 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 
 				campaignLocalization.setCompanyId(campaign.getCompanyId());
 				campaignLocalization.setGroupId(campaign.getGroupId());
+				campaignLocalization.setCampaignId(campaign.getCampaignId());
 				campaignLocalization.setLanguageId(languageId);
 			}
 

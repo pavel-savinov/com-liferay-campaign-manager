@@ -93,4 +93,12 @@ public class CampaignServiceImpl extends CampaignServiceBaseImpl {
 			endDate, status, serviceContext);
 	}
 
+	@Override
+	public Campaign updateCampaignStatus(
+			Campaign campaign, CampaignStatus newStatus)
+		throws PortalException {
+
+		return campaignLocalService.updateCampaignStatus(campaign, newStatus);
+	}
+
 }
