@@ -1,0 +1,11 @@
+Bundle-Name: Liferay Campaign Manager API
+Bundle-SymbolicName: com.liferay.campaign.manager.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.campaign.manager.exception,\
+	com.liferay.campaign.manager.model,\
+	com.liferay.campaign.manager.service,\
+	com.liferay.campaign.manager.service.persistence,\
+	com.liferay.campaign.manager.util
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Campaign Manager
