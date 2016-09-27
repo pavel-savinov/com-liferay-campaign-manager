@@ -45,6 +45,18 @@ public class CampaignLocalServiceWrapper implements CampaignLocalService,
 		return _campaignLocalService.addCampaign(campaign);
 	}
 
+	@Override
+	public com.liferay.campaign.manager.model.Campaign addCampaign(
+		long userId, java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.util.Date startDate, java.util.Date endDate,
+		com.liferay.campaign.manager.util.CampaignStatus status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _campaignLocalService.addCampaign(userId, nameMap,
+			descriptionMap, startDate, endDate, status, serviceContext);
+	}
+
 	/**
 	* Creates a new campaign with the primary key. Does not add the campaign to the database.
 	*
@@ -116,6 +128,27 @@ public class CampaignLocalServiceWrapper implements CampaignLocalService,
 	}
 
 	@Override
+	public com.liferay.campaign.manager.model.Campaign updateCampaign(
+		long userId, long campaignId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.util.Date startDate, java.util.Date endDate,
+		com.liferay.campaign.manager.util.CampaignStatus status,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _campaignLocalService.updateCampaign(userId, campaignId,
+			nameMap, descriptionMap, startDate, endDate, status, serviceContext);
+	}
+
+	@Override
+	public com.liferay.campaign.manager.model.Campaign updateCampaignStatus(
+		long campaignId,
+		com.liferay.campaign.manager.util.CampaignStatus newStatus)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _campaignLocalService.updateCampaignStatus(campaignId, newStatus);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return _campaignLocalService.getActionableDynamicQuery();
 	}
@@ -155,6 +188,18 @@ public class CampaignLocalServiceWrapper implements CampaignLocalService,
 	@Override
 	public int getCampaignsCount() {
 		return _campaignLocalService.getCampaignsCount();
+	}
+
+	@Override
+	public java.lang.String getCampaignDescription(long campaignId,
+		java.util.Locale locale) {
+		return _campaignLocalService.getCampaignDescription(campaignId, locale);
+	}
+
+	@Override
+	public java.lang.String getCampaignName(long campaignId,
+		java.util.Locale locale) {
+		return _campaignLocalService.getCampaignName(campaignId, locale);
 	}
 
 	/**
@@ -235,6 +280,18 @@ public class CampaignLocalServiceWrapper implements CampaignLocalService,
 	public java.util.List<com.liferay.campaign.manager.model.Campaign> getCampaigns(
 		int start, int end) {
 		return _campaignLocalService.getCampaigns(start, end);
+	}
+
+	@Override
+	public java.util.Map<java.util.Locale, java.lang.String> getDescriptionMap(
+		long campaignId) {
+		return _campaignLocalService.getDescriptionMap(campaignId);
+	}
+
+	@Override
+	public java.util.Map<java.util.Locale, java.lang.String> getNameMap(
+		long campaignId) {
+		return _campaignLocalService.getNameMap(campaignId);
 	}
 
 	/**

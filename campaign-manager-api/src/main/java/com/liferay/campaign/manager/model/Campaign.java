@@ -53,4 +53,22 @@ public interface Campaign extends CampaignModel, PersistedModel {
 				return Campaign.class;
 			}
 		};
+
+	public java.lang.String getDescription();
+
+	public java.lang.String getDescription(java.util.Locale locale);
+
+	public java.util.Map<java.util.Locale, java.lang.String> getDescriptionMap();
+
+	public java.lang.String getDescriptionMapAsXML();
+
+	public java.lang.String getName();
+
+	public java.lang.String getName(java.util.Locale locale);
+
+	public java.util.Map<java.util.Locale, java.lang.String> getNameMap();
+
+	public java.lang.String getNameMapAsXML();
+
+	public java.lang.String getStatusLabel();
 }

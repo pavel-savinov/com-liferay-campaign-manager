@@ -77,7 +77,7 @@ public class CampaignLocalizationModelImpl extends BaseModelImpl<CampaignLocaliz
 		TABLE_COLUMNS_MAP.put("languageId", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table CampaignLocalization (campaignLocalizationId LONG not null primary key,campaignId LONG,name VARCHAR(75) null,description VARCHAR(75) null,languageId VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table CampaignLocalization (campaignLocalizationId LONG not null primary key,campaignId LONG,name VARCHAR(140) null,description VARCHAR(340) null,languageId VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table CampaignLocalization";
 	public static final String ORDER_BY_JPQL = " ORDER BY campaignLocalization.campaignLocalizationId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY CampaignLocalization.campaignLocalizationId ASC";

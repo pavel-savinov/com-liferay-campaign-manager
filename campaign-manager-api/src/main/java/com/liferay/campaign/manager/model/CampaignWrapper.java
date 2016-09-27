@@ -192,6 +192,41 @@ public class CampaignWrapper implements Campaign, ModelWrapper<Campaign> {
 		return new CampaignWrapper((Campaign)_campaign.clone());
 	}
 
+	@Override
+	public java.lang.String getDescription() {
+		return _campaign.getDescription();
+	}
+
+	@Override
+	public java.lang.String getDescription(java.util.Locale locale) {
+		return _campaign.getDescription(locale);
+	}
+
+	@Override
+	public java.lang.String getDescriptionMapAsXML() {
+		return _campaign.getDescriptionMapAsXML();
+	}
+
+	@Override
+	public java.lang.String getName() {
+		return _campaign.getName();
+	}
+
+	@Override
+	public java.lang.String getName(java.util.Locale locale) {
+		return _campaign.getName(locale);
+	}
+
+	@Override
+	public java.lang.String getNameMapAsXML() {
+		return _campaign.getNameMapAsXML();
+	}
+
+	@Override
+	public java.lang.String getStatusLabel() {
+		return _campaign.getStatusLabel();
+	}
+
 	/**
 	* Returns the user name of this campaign.
 	*
@@ -270,6 +305,16 @@ public class CampaignWrapper implements Campaign, ModelWrapper<Campaign> {
 	@Override
 	public Date getStartDate() {
 		return _campaign.getStartDate();
+	}
+
+	@Override
+	public Map<java.util.Locale, java.lang.String> getDescriptionMap() {
+		return _campaign.getDescriptionMap();
+	}
+
+	@Override
+	public Map<java.util.Locale, java.lang.String> getNameMap() {
+		return _campaign.getNameMap();
 	}
 
 	/**

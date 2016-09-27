@@ -13,7 +13,7 @@ create table Campaign (
 create table CampaignLocalization (
 	campaignLocalizationId LONG not null primary key,
 	campaignId LONG,
-	name VARCHAR(75) null,
-	description VARCHAR(75) null,
+	name VARCHAR(140) null,
+	description VARCHAR(340) null,
 	languageId VARCHAR(75) null
 );

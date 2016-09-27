@@ -17,6 +17,7 @@ package com.liferay.campaign.manager.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.campaign.manager.model.Campaign;
+import com.liferay.campaign.manager.util.CampaignStatus;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -36,7 +38,10 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Provides the local service interface for Campaign. Methods of this
@@ -69,6 +74,12 @@ public interface CampaignLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public Campaign addCampaign(Campaign campaign);
+
+	public Campaign addCampaign(long userId,
+		Map<Locale, java.lang.String> nameMap,
+		Map<Locale, java.lang.String> descriptionMap, Date startDate,
+		Date endDate, CampaignStatus status, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	* Creates a new campaign with the primary key. Does not add the campaign to the database.
@@ -119,6 +130,16 @@ public interface CampaignLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public Campaign updateCampaign(Campaign campaign);
 
+	public Campaign updateCampaign(long userId, long campaignId,
+		Map<Locale, java.lang.String> nameMap,
+		Map<Locale, java.lang.String> descriptionMap, Date startDate,
+		Date endDate, CampaignStatus status, ServiceContext serviceContext)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Campaign updateCampaignStatus(long campaignId,
+		CampaignStatus newStatus) throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
@@ -146,6 +167,13 @@ public interface CampaignLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getCampaignsCount();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String getCampaignDescription(long campaignId,
+		Locale locale);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String getCampaignName(long campaignId, Locale locale);
 
 	/**
 	* Returns the OSGi service identifier.
@@ -206,6 +234,12 @@ public interface CampaignLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Campaign> getCampaigns(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Map<Locale, java.lang.String> getDescriptionMap(long campaignId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Map<Locale, java.lang.String> getNameMap(long campaignId);
 
 	/**
 	* Returns the number of rows matching the dynamic query.
