@@ -1,0 +1,11 @@
+Bundle-Name: Liferay Campaign Manager Test
+Bundle-SymbolicName: com.liferay.campaign.manager.test
+Bundle-Version: 1.0.0
+Import-Package:\
+	!com.liferay.util.xml,\
+	\
+	!org.junit.experimental.theories,\
+	*
+Include-Resource: test-classes/integration
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Campaign Manager
