@@ -15,8 +15,12 @@
 	<model name="com.liferay.campaign.manager.model.CampaignLocalization">
 		<field name="campaignLocalizationId" type="long" />
 		<field name="campaignId" type="long" />
-		<field name="name" type="String" />
-		<field name="description" type="String" />
+		<field name="name" type="String">
+			<hint name="max-length">140</hint>
+		</field>
+		<field name="description" type="String">
+			<hint name="max-length">340</hint>
+		</field>
 		<field name="languageId" type="String" />
 	</model>
 </model-hints>
