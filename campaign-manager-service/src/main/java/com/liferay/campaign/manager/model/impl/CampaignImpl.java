@@ -22,10 +22,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * The extended model implementation for the Campaign service. Represents a row in the &quot;Campaign&quot; database table, with each column mapped to a property of this class.
@@ -54,6 +57,24 @@ public class CampaignImpl extends CampaignBaseImpl {
 	}
 
 	@Override
+	public Map<Locale, String> getDescriptionMap() {
+		if (_descriptionMap != null) {
+			return _descriptionMap;
+		}
+
+		_descriptionMap = CampaignLocalServiceUtil.getDescriptionMap(this);
+
+		return _descriptionMap;
+	}
+
+	@Override
+	public String getDescriptionMapAsXML() {
+		return LocalizationUtil.updateLocalization(
+			getDescriptionMap(), StringPool.BLANK, "Description",
+			LocaleUtil.toLanguageId(LocaleUtil.getMostRelevantLocale()));
+	}
+
+	@Override
 	public String getName() {
 		return CampaignLocalServiceUtil.getCampaignName(
 			this, LocaleUtil.getMostRelevantLocale());
@@ -62,6 +83,24 @@ public class CampaignImpl extends CampaignBaseImpl {
 	@Override
 	public String getName(Locale locale) {
 		return CampaignLocalServiceUtil.getCampaignName(this, locale);
+	}
+
+	@Override
+	public Map<Locale, String> getNameMap() {
+		if (_nameMap != null) {
+			return _nameMap;
+		}
+
+		_nameMap = CampaignLocalServiceUtil.getNameMap(this);
+
+		return _nameMap;
+	}
+
+	@Override
+	public String getNameMapAsXML() {
+		return LocalizationUtil.updateLocalization(
+			getNameMap(), StringPool.BLANK, "Name",
+			LocaleUtil.toLanguageId(LocaleUtil.getMostRelevantLocale()));
 	}
 
 	@Override
@@ -110,5 +149,8 @@ public class CampaignImpl extends CampaignBaseImpl {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(CampaignImpl.class);
+
+	private Map<Locale, String> _descriptionMap;
+	private Map<Locale, String> _nameMap;
 
 }

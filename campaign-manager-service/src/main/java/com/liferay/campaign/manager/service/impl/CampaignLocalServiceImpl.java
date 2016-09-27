@@ -24,10 +24,13 @@ import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -138,6 +141,44 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
+	public Map<Locale, String> getDescriptionMap(Campaign campaign) {
+		List<CampaignLocalization> campaignLocalizations =
+			campaignLocalizationPersistence.findByG_C(
+				campaign.getGroupId(), campaign.getCampaignId());
+
+		Map<Locale, String> descriptionMap = new HashMap<>();
+
+		for (CampaignLocalization campaignLocalization
+			: campaignLocalizations) {
+
+			descriptionMap.put(
+				LocaleUtil.fromLanguageId(campaignLocalization.getLanguageId()),
+				campaignLocalization.getDescription());
+		}
+
+		return descriptionMap;
+	}
+
+	@Override
+	public Map<Locale, String> getNameMap(Campaign campaign) {
+		List<CampaignLocalization> campaignLocalizations =
+			campaignLocalizationPersistence.findByG_C(
+				campaign.getGroupId(), campaign.getCampaignId());
+
+		Map<Locale, String> nameMap = new HashMap<>();
+
+		for (CampaignLocalization campaignLocalization
+				: campaignLocalizations) {
+
+			nameMap.put(
+				LocaleUtil.fromLanguageId(campaignLocalization.getLanguageId()),
+				campaignLocalization.getName());
+		}
+
+		return nameMap;
+	}
+
+	@Override
 	public Campaign updateCampaign(
 			long userId, long groupId, long campaignId,
 			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
@@ -169,6 +210,7 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Campaign updateCampaignStatus(
 			Campaign campaign, CampaignStatus newStatus)
 		throws PortalException {
