@@ -16,6 +16,7 @@ package com.liferay.campaign.manager.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.campaign.manager.exception.InvalidDateRangeException;
 import com.liferay.campaign.manager.exception.NoSuchCampaignException;
 import com.liferay.campaign.manager.model.Campaign;
 import com.liferay.campaign.manager.model.CampaignLocalization;
@@ -68,6 +69,8 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 		Campaign campaign = campaignPersistence.create(campaignId);
 
 		Date now = new Date();
+
+		validateDates(startDate, endDate);
 
 		campaign.setUuid(serviceContext.getUuid());
 		campaign.setGroupId(groupId);
@@ -190,6 +193,8 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 
 		Date now = new Date();
 
+		validateDates(startDate, endDate);
+
 		Campaign campaign = campaignPersistence.fetchByG_C(groupId, campaignId);
 
 		if (campaign == null) {
@@ -264,6 +269,14 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 			campaignLocalization.setDescription(description);
 
 			campaignLocalizationPersistence.update(campaignLocalization);
+		}
+	}
+
+	protected void validateDates(Date startDate, Date endDate)
+		throws InvalidDateRangeException {
+
+		if (startDate.after(endDate)) {
+			throw new InvalidDateRangeException();
 		}
 	}
 
