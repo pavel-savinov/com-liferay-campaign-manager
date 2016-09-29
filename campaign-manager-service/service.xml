@@ -50,4 +50,8 @@
 			<finder-column name="languageId" />
 		</finder>
 	</entity>
+
+	<exceptions>
+		<exception>InvalidDateRange</exception>
+	</exceptions>
 </service-builder>
