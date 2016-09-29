@@ -33,6 +33,8 @@
 		</aui:fieldset>
 
 		<aui:fieldset collapsed="<%= false %>" collapsible="<%= true %>" cssClass="dates-panel" label="dates">
+			<liferay-ui:error key="com.liferay.campaign.manager.exception.InvalidDateRangeException" message="please-enter-valid-date-range" />
+
 			<aui:input name="startDate" />
 
 			<aui:input name="endDate" />
