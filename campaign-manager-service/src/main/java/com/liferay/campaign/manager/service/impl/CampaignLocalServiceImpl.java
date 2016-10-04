@@ -16,7 +16,6 @@ package com.liferay.campaign.manager.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.campaign.manager.exception.NoSuchCampaignException;
 import com.liferay.campaign.manager.model.Campaign;
 import com.liferay.campaign.manager.model.CampaignLocalization;
 import com.liferay.campaign.manager.service.base.CampaignLocalServiceBaseImpl;
@@ -56,7 +55,7 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 
 	@Override
 	public Campaign addCampaign(
-			long userId, long groupId, Map<Locale, String> nameMap,
+			long userId, Map<Locale, String> nameMap,
 			Map<Locale, String> descriptionMap, Date startDate, Date endDate,
 			CampaignStatus status, ServiceContext serviceContext)
 		throws PortalException {
@@ -70,18 +69,17 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 		Date now = new Date();
 
 		campaign.setUuid(serviceContext.getUuid());
-		campaign.setGroupId(groupId);
-		campaign.setCompanyId(user.getCompanyId());
 		campaign.setCreateDate(serviceContext.getCreateDate(now));
 		campaign.setModifiedDate(serviceContext.getModifiedDate(now));
 		campaign.setUserId(user.getUserId());
 		campaign.setUserName(user.getFullName());
-
-		updateCampaignLocalization(campaign, nameMap, descriptionMap);
-
 		campaign.setStartDate(startDate);
 		campaign.setEndDate(endDate);
 		campaign.setStatus(status.ordinal());
+
+		// Campaign Localization
+
+		updateCampaignLocalization(campaignId, nameMap, descriptionMap);
 
 		campaignPersistence.update(campaign);
 
@@ -89,25 +87,10 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
-	public Campaign deleteCampaign(long groupId, long campaignId)
-		throws PortalException {
-
-		return campaignPersistence.removeByG_C(groupId, campaignId);
-	}
-
-	@Override
-	public Campaign getCampaign(long groupId, long campaignId)
-		throws PortalException {
-
-		return campaignPersistence.findByG_C(groupId, campaignId);
-	}
-
-	@Override
-	public String getCampaignDescription(Campaign campaign, Locale locale) {
+	public String getCampaignDescription(long campaignId, Locale locale) {
 		CampaignLocalization campaignLocalization =
-			campaignLocalizationPersistence.fetchByG_C_L(
-				campaign.getGroupId(), campaign.getCampaignId(),
-				LocaleUtil.toLanguageId(locale));
+			campaignLocalizationPersistence.fetchByC_L(
+				campaignId, LocaleUtil.toLanguageId(locale));
 
 		if (campaignLocalization == null) {
 			return StringPool.BLANK;
@@ -117,11 +100,10 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
-	public String getCampaignName(Campaign campaign, Locale locale) {
+	public String getCampaignName(long campaignId, Locale locale) {
 		CampaignLocalization campaignLocalization =
-			campaignLocalizationPersistence.fetchByG_C_L(
-				campaign.getGroupId(), campaign.getCampaignId(),
-				LocaleUtil.toLanguageId(locale));
+			campaignLocalizationPersistence.fetchByC_L(
+				campaignId, LocaleUtil.toLanguageId(locale));
 
 		if (campaignLocalization == null) {
 			return StringPool.BLANK;
@@ -131,20 +113,9 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
-	public List<Campaign> getCampaigns(long groupId, int start, int end) {
-		return campaignPersistence.findByGroupId(groupId, start, end);
-	}
-
-	@Override
-	public int getCampaignsCount(long groupId) {
-		return campaignPersistence.countByGroupId(groupId);
-	}
-
-	@Override
-	public Map<Locale, String> getDescriptionMap(Campaign campaign) {
+	public Map<Locale, String> getDescriptionMap(long campaignId) {
 		List<CampaignLocalization> campaignLocalizations =
-			campaignLocalizationPersistence.findByG_C(
-				campaign.getGroupId(), campaign.getCampaignId());
+			campaignLocalizationPersistence.findByCampaignId(campaignId);
 
 		Map<Locale, String> descriptionMap = new HashMap<>();
 
@@ -160,10 +131,9 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	@Override
-	public Map<Locale, String> getNameMap(Campaign campaign) {
+	public Map<Locale, String> getNameMap(long campaignId) {
 		List<CampaignLocalization> campaignLocalizations =
-			campaignLocalizationPersistence.findByG_C(
-				campaign.getGroupId(), campaign.getCampaignId());
+			campaignLocalizationPersistence.findByCampaignId(campaignId);
 
 		Map<Locale, String> nameMap = new HashMap<>();
 
@@ -180,29 +150,23 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 
 	@Override
 	public Campaign updateCampaign(
-			long userId, long groupId, long campaignId,
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			Date startDate, Date endDate, CampaignStatus status,
-			ServiceContext serviceContext)
+			long userId, long campaignId, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, Date startDate, Date endDate,
+			CampaignStatus status, ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
 		Date now = new Date();
 
-		Campaign campaign = campaignPersistence.fetchByG_C(groupId, campaignId);
-
-		if (campaign == null) {
-			throw new NoSuchCampaignException();
-		}
+		Campaign campaign = campaignPersistence.findByPrimaryKey(campaignId);
 
 		campaign.setModifiedDate(serviceContext.getModifiedDate(now));
-
-		updateCampaignLocalization(campaign, nameMap, descriptionMap);
-
 		campaign.setStartDate(startDate);
 		campaign.setEndDate(endDate);
 		campaign.setStatus(status.ordinal());
+
+		updateCampaignLocalization(campaignId, nameMap, descriptionMap);
 
 		campaignPersistence.update(campaign);
 
@@ -212,8 +176,10 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Campaign updateCampaignStatus(
-			Campaign campaign, CampaignStatus newStatus)
+			long campaignId, CampaignStatus newStatus)
 		throws PortalException {
+
+		Campaign campaign = campaignPersistence.fetchByPrimaryKey(campaignId);
 
 		Date now = new Date();
 
@@ -226,7 +192,7 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 	}
 
 	protected void updateCampaignLocalization(
-		Campaign campaign, Map<Locale, String> nameMap,
+		long campaignId, Map<Locale, String> nameMap,
 		Map<Locale, String> descriptionMap) {
 
 		Set<Locale> localeSet = new HashSet<>();
@@ -244,9 +210,8 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 			String languageId = LocaleUtil.toLanguageId(locale);
 
 			CampaignLocalization campaignLocalization =
-				campaignLocalizationPersistence.fetchByG_C_L(
-					campaign.getGroupId(), campaign.getCampaignId(),
-					languageId);
+				campaignLocalizationPersistence.fetchByC_L(
+					campaignId, languageId);
 
 			if (campaignLocalization == null) {
 				long campaignLocalizationId = counterLocalService.increment();
@@ -254,9 +219,7 @@ public class CampaignLocalServiceImpl extends CampaignLocalServiceBaseImpl {
 				campaignLocalization = campaignLocalizationPersistence.create(
 					campaignLocalizationId);
 
-				campaignLocalization.setCompanyId(campaign.getCompanyId());
-				campaignLocalization.setGroupId(campaign.getGroupId());
-				campaignLocalization.setCampaignId(campaign.getCampaignId());
+				campaignLocalization.setCampaignId(campaignId);
 				campaignLocalization.setLanguageId(languageId);
 			}
 

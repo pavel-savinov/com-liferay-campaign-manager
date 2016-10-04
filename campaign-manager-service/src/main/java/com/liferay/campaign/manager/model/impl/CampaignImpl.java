@@ -48,12 +48,13 @@ public class CampaignImpl extends CampaignBaseImpl {
 	@Override
 	public String getDescription() {
 		return CampaignLocalServiceUtil.getCampaignDescription(
-			this, LocaleUtil.getMostRelevantLocale());
+			getCampaignId(), LocaleUtil.getMostRelevantLocale());
 	}
 
 	@Override
 	public String getDescription(Locale locale) {
-		return CampaignLocalServiceUtil.getCampaignDescription(this, locale);
+		return CampaignLocalServiceUtil.getCampaignDescription(
+			getCampaignId(), locale);
 	}
 
 	@Override
@@ -62,7 +63,8 @@ public class CampaignImpl extends CampaignBaseImpl {
 			return _descriptionMap;
 		}
 
-		_descriptionMap = CampaignLocalServiceUtil.getDescriptionMap(this);
+		_descriptionMap = CampaignLocalServiceUtil.getDescriptionMap(
+			getCampaignId());
 
 		return _descriptionMap;
 	}
@@ -77,12 +79,13 @@ public class CampaignImpl extends CampaignBaseImpl {
 	@Override
 	public String getName() {
 		return CampaignLocalServiceUtil.getCampaignName(
-			this, LocaleUtil.getMostRelevantLocale());
+			getCampaignId(), LocaleUtil.getMostRelevantLocale());
 	}
 
 	@Override
 	public String getName(Locale locale) {
-		return CampaignLocalServiceUtil.getCampaignName(this, locale);
+		return CampaignLocalServiceUtil.getCampaignName(
+			getCampaignId(), locale);
 	}
 
 	@Override
@@ -91,7 +94,7 @@ public class CampaignImpl extends CampaignBaseImpl {
 			return _nameMap;
 		}
 
-		_nameMap = CampaignLocalServiceUtil.getNameMap(this);
+		_nameMap = CampaignLocalServiceUtil.getNameMap(getCampaignId());
 
 		return _nameMap;
 	}
@@ -106,7 +109,9 @@ public class CampaignImpl extends CampaignBaseImpl {
 	@Override
 	public int getStatus() {
 		Date now = new Date();
+
 		CampaignStatus status = CampaignStatus.values()[super.getStatus()];
+
 		CampaignStatus newStatus = null;
 
 		switch (status) {
@@ -129,7 +134,8 @@ public class CampaignImpl extends CampaignBaseImpl {
 
 		if (newStatus != null) {
 			try {
-				CampaignLocalServiceUtil.updateCampaignStatus(this, newStatus);
+				CampaignLocalServiceUtil.updateCampaignStatus(
+					getCampaignId(), newStatus);
 			}
 			catch (PortalException pe) {
 				_log.error("Error updating campaign status", pe);
@@ -143,7 +149,7 @@ public class CampaignImpl extends CampaignBaseImpl {
 
 	@Override
 	public String getStatusLabel() {
-		CampaignStatus status = CampaignStatus.values()[this.getStatus()];
+		CampaignStatus status = CampaignStatus.values()[getStatus()];
 
 		return StringUtil.toLowerCase(status.name());
 	}
