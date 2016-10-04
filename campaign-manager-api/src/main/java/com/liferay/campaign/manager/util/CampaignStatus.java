@@ -19,6 +19,6 @@ package com.liferay.campaign.manager.util;
  */
 public enum CampaignStatus {
 
-	DRAFT, SCHEDULED, STARTED, PAUSED, FINISHED
+	DRAFT, FINISHED, PAUSED, SCHEDULED, STARTED
 
 }
