@@ -14,14 +14,27 @@
 
 package com.liferay.campaign.manager.web.internal.portlet.action;
 
+import com.liferay.campaign.manager.model.Campaign;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -41,9 +54,35 @@ public class CopyCampaignMVCRenderCommand implements MVCRenderCommand {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortletException {
 
-		renderRequest.setAttribute("copyCampaign", true);
+		long campaignId = ParamUtil.getLong(renderRequest, "campaignId");
+
+		Campaign campaign = _campaignLocalService.fetchCampaign(campaignId);
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			renderRequest);
+
+		Map<Locale, String> nameMap = campaign.getNameMap();
+
+		for (Locale locale : nameMap.keySet()) {
+			StringBundler name = new StringBundler();
+
+			name.append(nameMap.get(locale));
+			name.append(StringPool.SPACE);
+			name.append(StringPool.OPEN_PARENTHESIS);
+			name.append(LanguageUtil.get(request, "automatic-copy"));
+			name.append(StringPool.CLOSE_PARENTHESIS);
+
+			nameMap.put(locale, name.toString());
+		}
+
+		campaign.setCampaignId(0);
+
+		renderRequest.setAttribute("campaign", campaign);
 
 		return "/edit_campaign.jsp";
 	}
+
+	@Reference
+	private CampaignLocalService _campaignLocalService;
 
 }

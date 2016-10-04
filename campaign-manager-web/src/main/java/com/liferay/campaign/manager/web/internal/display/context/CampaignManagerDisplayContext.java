@@ -15,7 +15,6 @@
 package com.liferay.campaign.manager.web.internal.display.context;
 
 import com.liferay.campaign.manager.model.Campaign;
-import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.service.CampaignLocalServiceUtil;
 import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
@@ -31,13 +30,10 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -45,8 +41,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.PortletException;
@@ -60,47 +54,13 @@ import javax.servlet.http.HttpServletRequest;
 public class CampaignManagerDisplayContext {
 
 	public CampaignManagerDisplayContext(
-		CampaignLocalService campaignLocalService,
 		LiferayPortletRequest portletRequest,
 		LiferayPortletResponse portletResponse) {
-
-		_campaignLocalService = campaignLocalService;
 
 		_request = PortalUtil.getHttpServletRequest(portletRequest);
 
 		_portletRequest = portletRequest;
 		_portletResponse = portletResponse;
-	}
-
-	public Campaign getCampaign() throws PortalException {
-		if ((_campaign != null) || (getCampaignId() <= 0)) {
-			return _campaign;
-		}
-
-		_campaign = _campaignLocalService.getCampaign(getCampaignId());
-
-		boolean copyCampaign = GetterUtil.getBoolean(
-			_portletRequest.getAttribute("copyCampaign"));
-
-		if (copyCampaign) {
-			Map<Locale, String> nameMap = _campaign.getNameMap();
-
-			for (Locale locale : nameMap.keySet()) {
-				StringBundler name = new StringBundler();
-
-				name.append(nameMap.get(locale));
-				name.append(StringPool.SPACE);
-				name.append(StringPool.OPEN_PARENTHESIS);
-				name.append(LanguageUtil.get(_request, "automatic-copy"));
-				name.append(StringPool.CLOSE_PARENTHESIS);
-
-				nameMap.put(locale, name.toString());
-			}
-
-			_campaign.setCampaignId(0);
-		}
-
-		return _campaign;
 	}
 
 	public long getCampaignId() {
@@ -401,9 +361,7 @@ public class CampaignManagerDisplayContext {
 		return orderByAsc;
 	}
 
-	private Campaign _campaign;
 	private Long _campaignId;
-	private final CampaignLocalService _campaignLocalService;
 	private String _displayStyle;
 	private String[] _displayViews;
 	private String _navigation;

@@ -26,7 +26,6 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.campaign.manager.exception.InvalidDateRangeException" %><%@
 page import="com.liferay.campaign.manager.model.Campaign" %><%@
-page import="com.liferay.campaign.manager.service.CampaignLocalService" %><%@
 page import="com.liferay.campaign.manager.util.CampaignStatus" %><%@
 page import="com.liferay.campaign.manager.web.internal.display.context.CampaignManagerDisplayContext" %><%@
 page import="com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys" %><%@
@@ -47,7 +46,5 @@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 <%@ include file="/init-ext.jsp" %>
 
 <%
-CampaignLocalService campaignLocalService = (CampaignLocalService)request.getAttribute("campaignLocalService");
-
-CampaignManagerDisplayContext campaignManagerDisplayContext = new CampaignManagerDisplayContext(campaignLocalService, liferayPortletRequest, liferayPortletResponse);
+CampaignManagerDisplayContext campaignManagerDisplayContext = new CampaignManagerDisplayContext(liferayPortletRequest, liferayPortletResponse);
 %>

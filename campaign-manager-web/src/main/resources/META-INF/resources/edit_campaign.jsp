@@ -16,14 +16,18 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+Campaign campaign = (Campaign)renderRequest.getAttribute("campaign");
+%>
+
 <portlet:actionURL name="/campaign_manager/edit_campaign" var="addCampaignURL" />
 
 <aui:form action="<%= addCampaignURL %>" cssClass="container-fluid-1280">
 	<aui:input name="redirect" type="hidden" value="<%= campaignManagerDisplayContext.getRedirect() %>" />
 	<aui:input name="groupId" type="hidden" value="<%= scopeGroupId %>" />
-	<aui:input name="campaignId" type="hidden" value="<%= campaignManagerDisplayContext.getCampaign() != null ? String.valueOf(campaignManagerDisplayContext.getCampaign().getCampaignId()) : String.valueOf(campaignManagerDisplayContext.getCampaignId()) %>" />
+	<aui:input name="campaignId" type="hidden" value="<%= (campaign != null) ? String.valueOf(campaign.getCampaignId()) : String.valueOf(campaignManagerDisplayContext.getCampaignId()) %>" />
 
-	<aui:model-context bean="<%= campaignManagerDisplayContext.getCampaign() %>" model="<%= Campaign.class %>" />
+	<aui:model-context bean="<%= campaign %>" model="<%= Campaign.class %>" />
 
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>

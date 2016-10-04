@@ -14,19 +14,12 @@
 
 package com.liferay.campaign.manager.web.internal.portlet;
 
-import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
-import java.io.IOException;
-
 import javax.portlet.Portlet;
-import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -51,19 +44,4 @@ import org.osgi.service.component.annotations.Reference;
 	service = Portlet.class
 )
 public class CampaignManagerPortlet extends MVCPortlet {
-
-	@Override
-	public void render(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws IOException, PortletException {
-
-		renderRequest.setAttribute(
-			"campaignLocalService", _campaignLocalService);
-
-		super.render(renderRequest, renderResponse);
-	}
-
-	@Reference
-	private CampaignLocalService _campaignLocalService;
-
 }
