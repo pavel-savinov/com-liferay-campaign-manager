@@ -16,6 +16,12 @@
 
 <%@ include file="/init.jsp" %>
 
+<aui:nav-bar markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item label="campaigns" selected="<%= true %>" />
+	</aui:nav>
+</aui:nav-bar>
+
 <liferay-util:include page="/campaign_toolbar.jsp" servletContext="<%= application %>">
 	<liferay-util:param name="searchContainerId" value="campaigns" />
 </liferay-util:include>
