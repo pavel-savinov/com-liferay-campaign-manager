@@ -14,13 +14,10 @@
 
 package com.liferay.campaign.manager.web.internal.portlet.action;
 
-import com.liferay.campaign.manager.service.CampaignService;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.portlet.ActionRequest;
@@ -47,40 +44,26 @@ public class DeleteCampaignMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		try {
-			long groupId = ParamUtil.getLong(actionRequest, "groupId");
+		long[] deleteCampaignsIds = null;
 
-			long[] deleteCampaignsIds = null;
+		long campaignId = ParamUtil.getLong(actionRequest, "campaignId");
 
-			long campaignId = ParamUtil.getLong(actionRequest, "campaignId");
-
-			if (campaignId > 0) {
-				deleteCampaignsIds = new long[] {campaignId};
-			}
-			else {
-				deleteCampaignsIds = ParamUtil.getLongValues(
-					actionRequest, "rowIds");
-			}
-
-			for (long deleteCampaignId : deleteCampaignsIds) {
-				_campaignService.deleteCampaign(groupId, deleteCampaignId);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
+		if (campaignId > 0) {
+			deleteCampaignsIds = new long[] {campaignId};
 		}
-		catch (Exception e) {
-			_log.error("Unable to delete campaign", e);
-
-			SessionErrors.add(actionRequest, e.getClass(), e);
-
-			actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+		else {
+			deleteCampaignsIds = ParamUtil.getLongValues(
+				actionRequest, "rowIds");
 		}
+
+		for (long deleteCampaignId : deleteCampaignsIds) {
+			_campaignLocalService.deleteCampaign(deleteCampaignId);
+		}
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		DeleteCampaignMVCActionCommand.class);
-
 	@Reference
-	private CampaignService _campaignService;
+	private CampaignLocalService _campaignLocalService;
 
 }

@@ -14,7 +14,7 @@
 
 package com.liferay.campaign.manager.web.internal.portlet;
 
-import com.liferay.campaign.manager.service.CampaignService;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
@@ -57,12 +57,13 @@ public class CampaignManagerPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		renderRequest.setAttribute("campaignService", _campaignService);
+		renderRequest.setAttribute(
+			"campaignLocalService", _campaignLocalService);
 
 		super.render(renderRequest, renderResponse);
 	}
 
 	@Reference
-	private CampaignService _campaignService;
+	private CampaignLocalService _campaignLocalService;
 
 }

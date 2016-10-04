@@ -14,15 +14,11 @@
 
 package com.liferay.campaign.manager.web.internal.portlet.action;
 
-import com.liferay.campaign.manager.model.Campaign;
-import com.liferay.campaign.manager.service.CampaignService;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.portlet.ActionRequest;
@@ -49,31 +45,15 @@ public class ResumeCampaignMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		try {
-			long groupId = ParamUtil.getLong(actionRequest, "groupId");
-			long campaignId = ParamUtil.getLong(actionRequest, "campaignId");
+		long campaignId = ParamUtil.getLong(actionRequest, "campaignId");
 
-			Campaign campaign = _campaignService.getCampaign(
-				groupId, campaignId);
+		_campaignLocalService.updateCampaignStatus(
+			campaignId, CampaignStatus.STARTED);
 
-			_campaignService.updateCampaignStatus(
-				campaign, CampaignStatus.STARTED);
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			_log.error("Unable to delete campaign", e);
-
-			SessionErrors.add(actionRequest, e.getClass(), e);
-
-			actionResponse.setRenderParameter("mvcPath", "/error.jsp");
-		}
+		sendRedirect(actionRequest, actionResponse);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		ResumeCampaignMVCActionCommand.class);
-
 	@Reference
-	private CampaignService _campaignService;
+	private CampaignLocalService _campaignLocalService;
 
 }

@@ -15,7 +15,7 @@
 package com.liferay.campaign.manager.web.internal.portlet.action;
 
 import com.liferay.campaign.manager.model.Campaign;
-import com.liferay.campaign.manager.service.CampaignService;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -63,7 +63,6 @@ public class EditCampaignMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 		long campaignId = ParamUtil.getLong(actionRequest, "campaignId");
 
 		Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
@@ -101,14 +100,14 @@ public class EditCampaignMVCActionCommand extends BaseMVCActionCommand {
 				Campaign.class.getName(), actionRequest);
 
 			if (campaignId > 0) {
-				_campaignService.updateCampaign(
-					themeDisplay.getUserId(), groupId, campaignId, nameMap,
+				_campaignLocalService.updateCampaign(
+					themeDisplay.getUserId(), campaignId, nameMap,
 					descriptionMap, startDate, endDate, campaignStatus,
 					serviceContext);
 			}
 			else {
-				_campaignService.addCampaign(
-					themeDisplay.getUserId(), groupId, nameMap, descriptionMap,
+				_campaignLocalService.addCampaign(
+					themeDisplay.getUserId(), nameMap, descriptionMap,
 					startDate, endDate, campaignStatus, serviceContext);
 			}
 
@@ -161,6 +160,6 @@ public class EditCampaignMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	@Reference
-	private CampaignService _campaignService;
+	private CampaignLocalService _campaignLocalService;
 
 }
