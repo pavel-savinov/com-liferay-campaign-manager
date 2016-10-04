@@ -14,11 +14,9 @@
 
 package com.liferay.campaign.manager.web.internal.display.context;
 
-import com.liferay.campaign.manager.model.Campaign;
 import com.liferay.campaign.manager.service.CampaignLocalServiceUtil;
 import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
-import com.liferay.campaign.manager.web.internal.util.comparator.CampaignStartDateComparator;
 import com.liferay.frontend.taglib.servlet.taglib.ManagementBarFilterItem;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -31,7 +29,6 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -129,27 +126,6 @@ public class CampaignManagerDisplayContext {
 		return _navigation;
 	}
 
-	public String getOrderByCol() {
-		if (Validator.isNotNull(_orderByCol)) {
-			return _orderByCol;
-		}
-
-		_orderByCol = ParamUtil.getString(
-			_request, "orderByCol", "modified-date");
-
-		return _orderByCol;
-	}
-
-	public String getOrderByType() {
-		if (Validator.isNotNull(_orderByType)) {
-			return _orderByType;
-		}
-
-		_orderByType = ParamUtil.getString(_request, "orderByType", "asc");
-
-		return _orderByType;
-	}
-
 	public PortletURL getPortletURL() throws PortalException {
 		PortletURL portletURL = _portletResponse.createRenderURL();
 
@@ -209,13 +185,6 @@ public class CampaignManagerDisplayContext {
 		_searchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(_portletResponse));
 		_searchContainer.setSearch(false);
-
-		OrderByComparator<Campaign> orderByComparator =
-			new CampaignStartDateComparator(isOrderByAsc());
-
-		_searchContainer.setOrderByCol(getOrderByCol());
-		_searchContainer.setOrderByComparator(orderByComparator);
-		_searchContainer.setOrderByType(getOrderByType());
 
 		_searchContainer.setTotal(CampaignLocalServiceUtil.getCampaignsCount());
 		_searchContainer.setResults(
@@ -349,24 +318,10 @@ public class CampaignManagerDisplayContext {
 			active, label, portletURL.toString());
 	}
 
-	protected boolean isOrderByAsc() {
-		String orderByType = getOrderByType();
-
-		boolean orderByAsc = false;
-
-		if (orderByType.equals("asc")) {
-			orderByAsc = true;
-		}
-
-		return orderByAsc;
-	}
-
 	private Long _campaignId;
 	private String _displayStyle;
 	private String[] _displayViews;
 	private String _navigation;
-	private String _orderByCol;
-	private String _orderByType;
 	private final LiferayPortletRequest _portletRequest;
 	private final LiferayPortletResponse _portletResponse;
 	private String _redirect;
