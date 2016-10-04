@@ -9,13 +9,8 @@
 
 		<column name="campaignId" primary="true" type="long" />
 
-		<!-- Group instance -->
-
-		<column name="groupId" type="long" />
-
 		<!-- Audit fields -->
 
-		<column name="companyId" type="long" />
 		<column name="userId" type="long" />
 		<column name="userName" type="String" />
 		<column name="createDate" type="Date" />
@@ -27,20 +22,9 @@
 		<column name="endDate" type="Date" />
 		<column name="status" type="int" />
 
-		<finder name="GroupId" return-type="Collection">
-			<finder-column name="groupId" />
-		</finder>
-
-		<finder name="G_C" return-type="Campaign">
-			<finder-column name="groupId" />
-			<finder-column name="campaignId" />
-		</finder>
-
 		<!-- References -->
 
 		<reference entity="CampaignLocalization" package-path="com.liferay.campaign.manager" />
-		<reference entity="Company" package-path="com.liferay.portal" />
-		<reference entity="Group" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
 
@@ -50,11 +34,6 @@
 
 		<column name="campaignLocalizationId" primary="true" type="long" />
 
-		<!-- Audit fields -->
-
-		<column name="companyId" type="long" />
-		<column name="groupId" type="long" />
-
 		<!-- Other fields -->
 
 		<column name="campaignId" type="long" />
@@ -62,13 +41,11 @@
 		<column name="description" type="String" />
 		<column name="languageId" type="String" />
 
-		<finder name="G_C" return-type="Collection">
-			<finder-column name="groupId" />
+		<finder name="CampaignId" return-type="Collection">
 			<finder-column name="campaignId" />
 		</finder>
 
-		<finder name="G_C_L" return-type="CampaignLocalization">
-			<finder-column name="groupId" />
+		<finder name="C_L" return-type="CampaignLocalization">
 			<finder-column name="campaignId" />
 			<finder-column name="languageId" />
 		</finder>
