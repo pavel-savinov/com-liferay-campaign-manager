@@ -15,8 +15,8 @@
 package com.liferay.campaign.manager.web.internal.display.context;
 
 import com.liferay.campaign.manager.model.Campaign;
+import com.liferay.campaign.manager.service.CampaignLocalService;
 import com.liferay.campaign.manager.service.CampaignLocalServiceUtil;
-import com.liferay.campaign.manager.service.CampaignService;
 import com.liferay.campaign.manager.util.CampaignStatus;
 import com.liferay.campaign.manager.web.internal.constants.CampaignManagerPortletKeys;
 import com.liferay.campaign.manager.web.internal.util.comparator.CampaignStartDateComparator;
@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -45,7 +44,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,10 +60,11 @@ import javax.servlet.http.HttpServletRequest;
 public class CampaignManagerDisplayContext {
 
 	public CampaignManagerDisplayContext(
-		CampaignService campaignService, LiferayPortletRequest portletRequest,
+		CampaignLocalService campaignLocalService,
+		LiferayPortletRequest portletRequest,
 		LiferayPortletResponse portletResponse) {
 
-		_campaignService = campaignService;
+		_campaignLocalService = campaignLocalService;
 
 		_request = PortalUtil.getHttpServletRequest(portletRequest);
 
@@ -74,86 +73,64 @@ public class CampaignManagerDisplayContext {
 	}
 
 	public Campaign getCampaign() throws PortalException {
+		if ((_campaign != null) || (getCampaignId() <= 0)) {
+			return _campaign;
+		}
+
+		_campaign = _campaignLocalService.getCampaign(getCampaignId());
+
 		boolean copyCampaign = GetterUtil.getBoolean(
 			_portletRequest.getAttribute("copyCampaign"));
 
-		if ((_campaign == null) && getCampaignId() > 0) {
-			_campaign = _campaignService.getCampaign(
-				getGroupId(), getCampaignId());
+		if (copyCampaign) {
+			Map<Locale, String> nameMap = _campaign.getNameMap();
 
-			if (copyCampaign) {
-				Map<Locale, String> nameMap = _campaign.getNameMap();
+			for (Locale locale : nameMap.keySet()) {
+				StringBundler name = new StringBundler();
 
-				for (Locale locale : nameMap.keySet()) {
-					StringBundler name = new StringBundler();
+				name.append(nameMap.get(locale));
+				name.append(StringPool.SPACE);
+				name.append(StringPool.OPEN_PARENTHESIS);
+				name.append(LanguageUtil.get(_request, "automatic-copy"));
+				name.append(StringPool.CLOSE_PARENTHESIS);
 
-					name.append(nameMap.get(locale));
-					name.append(StringPool.SPACE);
-					name.append(StringPool.OPEN_PARENTHESIS);
-					name.append(LanguageUtil.get(_request, "automatic-copy"));
-					name.append(StringPool.CLOSE_PARENTHESIS);
-
-					nameMap.put(locale, name.toString());
-				}
-
-				_campaign.setCampaignId(0);
+				nameMap.put(locale, name.toString());
 			}
+
+			_campaign.setCampaignId(0);
 		}
 
 		return _campaign;
 	}
 
 	public long getCampaignId() {
-		if (_campaignId == null) {
-			_campaignId = ParamUtil.getLong(_request, "campaignId");
+		if (_campaignId != null) {
+			return _campaignId;
 		}
+
+		_campaignId = ParamUtil.getLong(_request, "campaignId");
 
 		return _campaignId;
 	}
 
 	public String getDisplayStyle() {
-		if (_displayStyle == null) {
-			_displayStyle = getDisplayStyle(_request, getDisplayViews());
+		if (_displayStyle != null) {
+			return _displayStyle;
 		}
+
+		_displayStyle = getDisplayStyle(_request, getDisplayViews());
 
 		return _displayStyle;
 	}
 
 	public String[] getDisplayViews() {
-		if (_displayViews == null) {
-			_displayViews = new String[] {"list"};
+		if (_displayViews != null) {
+			return _displayViews;
 		}
+
+		_displayViews = new String[] {"list"};
 
 		return _displayViews;
-	}
-
-	public Calendar getEndDate() throws Exception {
-		if (_endDate != null) {
-			return _endDate;
-		}
-
-		Campaign campaign = getCampaign();
-
-		Calendar endDate = Calendar.getInstance();
-
-		if (campaign != null) {
-			endDate.setTime(campaign.getEndDate());
-		}
-		else {
-			endDate.add(Calendar.YEAR, 1);
-		}
-
-		_endDate = endDate;
-
-		return _endDate;
-	}
-
-	public long getGroupId() {
-		if (_groupId == null) {
-			_groupId = ParamUtil.getLong(_request, "groupId");
-		}
-
-		return _groupId;
 	}
 
 	public List<ManagementBarFilterItem> getManagementBarStatusFilterItems()
@@ -247,11 +224,6 @@ public class CampaignManagerDisplayContext {
 			portletURL.setParameter("keywords", keywords);
 		}
 
-		if (!isShowEditActions()) {
-			portletURL.setParameter(
-				"showEditActions", String.valueOf(isShowEditActions()));
-		}
-
 		return portletURL;
 	}
 
@@ -267,9 +239,6 @@ public class CampaignManagerDisplayContext {
 		if (_searchContainer != null) {
 			return _searchContainer;
 		}
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		_searchContainer = new SearchContainer(
 			_portletRequest, PortletURLUtil.clone(
@@ -291,34 +260,12 @@ public class CampaignManagerDisplayContext {
 		_searchContainer.setTotal(CampaignLocalServiceUtil.getCampaignsCount());
 		_searchContainer.setResults(
 			CampaignLocalServiceUtil.getCampaigns(
-				themeDisplay.getScopeGroupId(), _searchContainer.getStart(),
-				_searchContainer.getEnd()));
+				_searchContainer.getStart(), _searchContainer.getEnd()));
 
 		_searchContainer.setEmptyResultsMessageCssClass(
 			"taglib-empty-result-message-header-has-plus-btn");
 
 		return _searchContainer;
-	}
-
-	public Calendar getStartDate() throws Exception {
-		if (_startDate != null) {
-			return _startDate;
-		}
-
-		Campaign campaign = getCampaign();
-
-		Calendar endDate = Calendar.getInstance();
-
-		if (campaign != null) {
-			endDate.setTime(campaign.getEndDate());
-		}
-		else {
-			endDate.add(Calendar.YEAR, 1);
-		}
-
-		_startDate = endDate;
-
-		return _startDate;
 	}
 
 	public int getStatus() {
@@ -383,17 +330,6 @@ public class CampaignManagerDisplayContext {
 		}
 
 		return false;
-	}
-
-	public boolean isShowEditActions() {
-		if (_showEditActions != null) {
-			return _showEditActions;
-		}
-
-		_showEditActions = ParamUtil.getBoolean(
-			_request, "showEditActions", true);
-
-		return _showEditActions;
 	}
 
 	protected String getDisplayStyle(
@@ -467,11 +403,9 @@ public class CampaignManagerDisplayContext {
 
 	private Campaign _campaign;
 	private Long _campaignId;
-	private final CampaignService _campaignService;
+	private final CampaignLocalService _campaignLocalService;
 	private String _displayStyle;
 	private String[] _displayViews;
-	private Calendar _endDate;
-	private Long _groupId;
 	private String _navigation;
 	private String _orderByCol;
 	private String _orderByType;
@@ -480,8 +414,6 @@ public class CampaignManagerDisplayContext {
 	private String _redirect;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
-	private Boolean _showEditActions;
-	private Calendar _startDate;
 	private Integer _status;
 
 }

@@ -22,7 +22,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 
 <liferay-frontend:management-bar
 	disabled="<%= campaignManagerDisplayContext.isDisabledManagementBar() %>"
-	includeCheckBox="<%= !user.isDefaultUser() && campaignManagerDisplayContext.isShowEditActions() %>"
+	includeCheckBox="<%= true %>"
 	searchContainerId="<%= searchContainerId %>"
 >
 	<liferay-frontend:management-bar-buttons>
@@ -35,22 +35,18 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation>
-			<portlet:renderURL var="viewArticlesHomeURL">
-				<portlet:param name="showEditActions" value="<%= String.valueOf(campaignManagerDisplayContext.isShowEditActions()) %>" />
-			</portlet:renderURL>
+			<portlet:renderURL var="viewArticlesHomeURL" />
 
 			<liferay-frontend:management-bar-filter-item active="<%= campaignManagerDisplayContext.isNavigationHome() %>" label="all" url="<%= viewArticlesHomeURL.toString() %>" />
 
 			<portlet:renderURL var="viewRecentArticlesURL">
 				<portlet:param name="navigation" value="recent" />
-				<portlet:param name="showEditActions" value="<%= String.valueOf(campaignManagerDisplayContext.isShowEditActions()) %>" />
 			</portlet:renderURL>
 
 			<liferay-frontend:management-bar-filter-item active="<%= campaignManagerDisplayContext.isNavigationRecent() %>" label="recent" url="<%= viewRecentArticlesURL.toString() %>" />
 
 			<portlet:renderURL var="viewMyArticlesURL">
 				<portlet:param name="navigation" value="mine" />
-				<portlet:param name="showEditActions" value="<%= String.valueOf(campaignManagerDisplayContext.isShowEditActions()) %>" />
 			</portlet:renderURL>
 
 			<liferay-frontend:management-bar-filter-item active="<%= campaignManagerDisplayContext.isNavigationMine() %>" label="mine" url="<%= viewMyArticlesURL.toString() %>" />

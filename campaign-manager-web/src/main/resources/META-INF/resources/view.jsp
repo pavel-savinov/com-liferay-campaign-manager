@@ -16,14 +16,12 @@
 
 <%@ include file="/init.jsp" %>
 
-<div id="<portlet:namespace />campaignsContainer">
-	<liferay-util:include page="/campaign_toolbar.jsp" servletContext="<%= application %>">
-		<liferay-util:param name="searchContainerId" value="campaigns" />
-	</liferay-util:include>
+<liferay-util:include page="/campaign_toolbar.jsp" servletContext="<%= application %>">
+	<liferay-util:param name="searchContainerId" value="campaigns" />
+</liferay-util:include>
 
-	<liferay-util:include page="/view_campaigns.jsp" servletContext="<%= application %>">
-		<liferay-util:param name="searchContainerId" value="campaigns" />
-	</liferay-util:include>
+<liferay-util:include page="/view_campaigns.jsp" servletContext="<%= application %>">
+	<liferay-util:param name="searchContainerId" value="campaigns" />
+</liferay-util:include>
 
-	<liferay-util:include page="/add_button.jsp" servletContext="<%= application %>" />
-</div>
+<liferay-util:include page="/add_button.jsp" servletContext="<%= application %>" />

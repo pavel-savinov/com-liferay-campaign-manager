@@ -114,22 +114,18 @@ public class CampaignImpl extends CampaignBaseImpl {
 
 		CampaignStatus newStatus = null;
 
-		switch (status) {
-			case SCHEDULED:
-				if (now.after(getStartDate()) && now.before(getEndDate())) {
-					newStatus = CampaignStatus.STARTED;
-				}
-				else if (now.after(getEndDate())) {
-					newStatus = CampaignStatus.FINISHED;
-				}
+		if (status == CampaignStatus.SCHEDULED) {
+			if (now.after(getStartDate()) && now.before(getEndDate())) {
+				newStatus = CampaignStatus.STARTED;
+			}
+			else if (now.after(getEndDate())) {
+				newStatus = CampaignStatus.FINISHED;
+			}
+		}
+		else if ((status == CampaignStatus.STARTED) &&
+				 now.after(getEndDate())) {
 
-				break;
-			case STARTED:
-				if (now.after(getEndDate())) {
-					newStatus = CampaignStatus.FINISHED;
-				}
-
-				break;
+			newStatus = CampaignStatus.FINISHED;
 		}
 
 		if (newStatus != null) {

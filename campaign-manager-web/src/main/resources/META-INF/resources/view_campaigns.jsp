@@ -21,8 +21,6 @@
 </portlet:actionURL>
 
 <aui:form action="<%= deleteCampaignsURL %>" cssClass="container-fluid-1280" method="post" name="fmCampaigns">
-	<aui:input name="groupId" type="hidden" value="<%= scopeGroupId %>" />
-
 	<liferay-ui:search-container
 		searchContainer="<%= campaignManagerDisplayContext.getSearchContainer() %>"
 	>
@@ -32,41 +30,43 @@
 			modelVar="campaign"
 		>
 			<liferay-ui:search-container-column-text
-				name="name" value="<%= campaign.getName() %>"
+				name="name"
+				value="<%= campaign.getName() %>"
 			/>
 
 			<liferay-ui:search-container-column-text
-				name="description" value="<%= campaign.getDescription() %>"
+				name="description"
+				value="<%= campaign.getDescription() %>"
 			/>
 
-			<liferay-ui:search-container-column-text name="status">
+			<liferay-ui:search-container-column-text
+				name="status"
+			>
 				<liferay-ui:message key="<%= campaign.getStatusLabel() %>" />
 			</liferay-ui:search-container-column-text>
 
-			<liferay-ui:search-container-column-text name="created">
+			<%
+			Date createDate = campaign.getCreateDate();
 
-				<%
-				Date createDate = campaign.getCreateDate();
+			String createDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - createDate.getTime(), true);
+			%>
 
-				String createDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - createDate.getTime(), true);
-				%>
-
-				<h6 class="text-default">
-					<liferay-ui:message arguments="<%= new String[] {createDateDescription} %>" key="x-ago" />
-				</h6>
+			<liferay-ui:search-container-column-text
+				name="created"
+			>
+				<liferay-ui:message arguments="<%= createDateDescription %>" key="x-ago" />
 			</liferay-ui:search-container-column-text>
 
-			<liferay-ui:search-container-column-text name="modified">
+			<%
+			Date modifiedDate = campaign.getModifiedDate();
 
-				<%
-				Date modifiedDate = campaign.getModifiedDate();
+			String modifiedDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - modifiedDate.getTime(), true);
+			%>
 
-				String modifiedDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - modifiedDate.getTime(), true);
-				%>
-
-				<h6 class="text-default">
-					<liferay-ui:message arguments="<%= new String[] {modifiedDateDescription} %>" key="x-ago" />
-				</h6>
+			<liferay-ui:search-container-column-text
+				name="modified"
+			>
+				<liferay-ui:message arguments="<%= modifiedDateDescription %>" key="x-ago" />
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-jsp

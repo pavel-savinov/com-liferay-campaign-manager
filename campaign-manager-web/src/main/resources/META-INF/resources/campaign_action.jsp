@@ -26,7 +26,6 @@ Campaign campaign = (Campaign)row.getObject();
 	<portlet:renderURL var="editCampaignURL">
 		<portlet:param name="mvcRenderCommandName" value="/campaign_manager/edit_campaign" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="groupId" value="<%= String.valueOf(campaign.getGroupId()) %>" />
 		<portlet:param name="campaignId" value="<%= String.valueOf(campaign.getCampaignId()) %>" />
 	</portlet:renderURL>
 
@@ -38,7 +37,6 @@ Campaign campaign = (Campaign)row.getObject();
 	<portlet:renderURL var="copyCampaignURL">
 		<portlet:param name="mvcRenderCommandName" value="/campaign_manager/copy_campaign" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="groupId" value="<%= String.valueOf(campaign.getGroupId()) %>" />
 		<portlet:param name="campaignId" value="<%= String.valueOf(campaign.getCampaignId()) %>" />
 	</portlet:renderURL>
 
@@ -51,7 +49,6 @@ Campaign campaign = (Campaign)row.getObject();
 		<c:when test="<%= campaign.getStatus() == CampaignStatus.STARTED.ordinal() %>">
 			<portlet:actionURL name="/campaign_manager/pause_campaign" var="pauseCampaignURL">
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="groupId" value="<%= String.valueOf(campaign.getGroupId()) %>" />
 				<portlet:param name="campaignId" value="<%= String.valueOf(campaign.getCampaignId()) %>" />
 			</portlet:actionURL>
 
@@ -63,7 +60,6 @@ Campaign campaign = (Campaign)row.getObject();
 		<c:when test="<%= campaign.getStatus() == CampaignStatus.PAUSED.ordinal() %>">
 			<portlet:actionURL name="/campaign_manager/resume_campaign" var="resumeCampaignURL">
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="groupId" value="<%= String.valueOf(campaign.getGroupId()) %>" />
 				<portlet:param name="campaignId" value="<%= String.valueOf(campaign.getCampaignId()) %>" />
 			</portlet:actionURL>
 
@@ -76,7 +72,6 @@ Campaign campaign = (Campaign)row.getObject();
 
 	<portlet:actionURL name="/campaign_manager/delete_campaign" var="deleteCampaignURL">
 		<portlet:param name="redirect" value="<%= currentURL %>" />
-		<portlet:param name="groupId" value="<%= String.valueOf(campaign.getGroupId()) %>" />
 		<portlet:param name="campaignId" value="<%= String.valueOf(campaign.getCampaignId()) %>" />
 	</portlet:actionURL>
 

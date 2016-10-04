@@ -24,7 +24,11 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%@ page import="com.liferay.campaign.manager.util.CampaignStatus" %><%@
+<%@ page import="com.liferay.campaign.manager.exception.InvalidDateRangeException" %><%@
+page import="com.liferay.campaign.manager.model.Campaign" %><%@
+page import="com.liferay.campaign.manager.service.CampaignLocalService" %><%@
+page import="com.liferay.campaign.manager.util.CampaignStatus" %><%@
+page import="com.liferay.campaign.manager.web.internal.display.context.CampaignManagerDisplayContext" %><%@
 page import="com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
@@ -32,10 +36,7 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %>
 
-<%@ page
-	import="com.liferay.campaign.manager.web.internal.display.context.CampaignManagerDisplayContext" %><%@
-page import="java.util.Date" %><%@ page import="com.liferay.campaign.manager.model.Campaign" %><%@
-page import="com.liferay.campaign.manager.service.CampaignService" %>
+<%@ page import="java.util.Date" %>
 
 <liferay-frontend:defineObjects />
 
@@ -46,6 +47,7 @@ page import="com.liferay.campaign.manager.service.CampaignService" %>
 <%@ include file="/init-ext.jsp" %>
 
 <%
-CampaignService campaignService = (CampaignService)request.getAttribute("campaignService");
-CampaignManagerDisplayContext campaignManagerDisplayContext = new CampaignManagerDisplayContext(campaignService, liferayPortletRequest, liferayPortletResponse);
+CampaignLocalService campaignLocalService = (CampaignLocalService)request.getAttribute("campaignLocalService");
+
+CampaignManagerDisplayContext campaignManagerDisplayContext = new CampaignManagerDisplayContext(campaignLocalService, liferayPortletRequest, liferayPortletResponse);
 %>
