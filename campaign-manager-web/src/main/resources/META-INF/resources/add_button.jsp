@@ -23,5 +23,5 @@
 		<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 	</portlet:renderURL>
 
-	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "campaign") %>' type="<%= AddMenuKeys.AddMenuType.PRIMARY %>" url="<%= addCampaignURL.toString() %>" />
+	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "campaign") %>' url="<%= addCampaignURL.toString() %>" />
 </liferay-frontend:add-menu>

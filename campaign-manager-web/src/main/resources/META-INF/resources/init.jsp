@@ -28,7 +28,6 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 page import="com.liferay.campaign.manager.model.Campaign" %><%@
 page import="com.liferay.campaign.manager.util.CampaignStatus" %><%@
 page import="com.liferay.campaign.manager.web.internal.display.context.CampaignManagerDisplayContext" %><%@
-page import="com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
