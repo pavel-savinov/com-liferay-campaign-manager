@@ -15,3 +15,11 @@ dependencies {
 	testIntegrationCompile project(":campaign-manager-api")
 	testIntegrationCompile project(":campaign-manager-service")
 }
+
+repositories {
+	mavenLocal()
+
+	maven {
+		url "http://nexus-wcm.liferay.org.es/repository/dxp"
+	}
+}

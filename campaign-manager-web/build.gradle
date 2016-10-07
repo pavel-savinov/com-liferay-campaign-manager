@@ -14,3 +14,11 @@ dependencies {
 	provided project(":campaign-manager-api")
 	provided project(":campaign-manager-service")
 }
+
+repositories {
+	mavenLocal()
+
+	maven {
+		url "http://nexus-wcm.liferay.org.es/repository/dxp"
+	}
+}
