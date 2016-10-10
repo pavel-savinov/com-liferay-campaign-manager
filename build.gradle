@@ -15,6 +15,8 @@ buildscript {
 		maven {
 			url "https://plugins.gradle.org/m2/"
 		}
+		
+
 	}
 }
 
@@ -68,4 +70,24 @@ tasks.coveralls {
 coveralls.jacocoReportPath = "build/reports/jacoco/coverageReport/coverageReport.xml"
 coveralls.sourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs).collect {
 	file -> file.absolutePath
+}
+
+task checkstyle {
+    ant.taskdef(resource: 'checkstyletask.properties') {
+        classpath {
+            fileset(dir: 'libs', includes: '*.jar')
+        }
+    }
+    
+    ant.checkstyle(config: 'checkstyle.xml', failOnViolation: false) {
+        fileset(dir: 'campaign-manager-service/src')
+        fileset(dir: 'campaign-manager-api/src')
+        fileset(dir: 'campaign-manager-web/src')
+        
+        formatter(type: 'xml', tofile: 'checkstyle_report.xml')
+    }
+    
+    ant.xslt(in: 'checkstyle_report.xml', out: 'checkstyle_report.html', style: 'checkstyle.xsl') {
+	param(name: 'team-name', expression: 'Campaign Manager')
+    }
 }
